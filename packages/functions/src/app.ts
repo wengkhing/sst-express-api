@@ -1,10 +1,22 @@
-import { ApiHandler } from "sst/node/api";
 import serverless from 'serverless-http';
 import express from 'express';
+import { DynamoDB } from 'aws-sdk';
+import { ApiHandler } from 'sst/node/api';
+
+const docClient = new DynamoDB.DocumentClient();
 
 const app = express();
 
-app.get('/test', (req, res) => {
+app.get('/test', async (req, res) => {
+  await docClient.put({
+    TableName: process.env.TABLE_NAME as string,
+    Item: {
+      pk: 'gfd',
+      sk: 'ffs',
+      foo: 'bar',
+    }
+  }).promise();
+
   return res.status(200).json({
     message: 'success'
   })
